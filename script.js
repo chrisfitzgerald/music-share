@@ -34,16 +34,24 @@ window.onYouTubeIframeAPIReady = function() {
     videoId: '',
     playerVars: {
       'playsinline': 1,
-      'controls': 1
+      'controls': 1,
+      'autoplay': 1
     },
     events: {
-      'onReady': onPlayerReady
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
     }
   });
 };
 
 function onPlayerReady(event) {
-  // Player is ready
+  console.log('Player is ready');
+}
+
+function onPlayerStateChange(event) {
+  if (event.data === YT.PlayerState.ENDED) {
+    closePlayer();
+  }
 }
 
 function getYouTubeId(url) {
@@ -54,8 +62,27 @@ function getYouTubeId(url) {
 
 function playYouTubeVideo(url) {
   const videoId = getYouTubeId(url);
-  if (videoId && player) {
-    player.loadVideoById(videoId);
+  if (videoId) {
+    if (!player) {
+      // If player isn't initialized yet, create it
+      player = new YT.Player('player', {
+        height: '100%',
+        width: '100%',
+        videoId: videoId,
+        playerVars: {
+          'playsinline': 1,
+          'controls': 1,
+          'autoplay': 1
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    } else {
+      // If player exists, load the new video
+      player.loadVideoById(videoId);
+    }
     playerContainer.classList.add('active');
   }
 }
@@ -301,14 +328,14 @@ function searchMusic(query) {
 }
 
 function playRandomMusic() {
-  const youtubeLinks = allMusic.filter(item => 
-    item.url.includes('youtube.com') || item.url.includes('youtu.be')
-  );
-  
-  if (youtubeLinks.length > 0) {
-    const randomIndex = Math.floor(Math.random() * youtubeLinks.length);
-    const randomMusic = youtubeLinks[randomIndex];
-    playYouTubeVideo(randomMusic.url);
+  const cards = document.querySelectorAll('.music-card');
+  if (cards.length > 0) {
+    const randomIndex = Math.floor(Math.random() * cards.length);
+    const randomCard = cards[randomIndex];
+    const playButton = randomCard.querySelector('.play-button');
+    if (playButton) {
+      playButton.click();
+    }
   }
 }
 
