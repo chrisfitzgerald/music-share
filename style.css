@@ -100,33 +100,14 @@ form button:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  max-height: calc(100vh - 400px);
-  overflow-y: auto;
-  padding-right: 10px;
   margin-top: 20px;
   position: relative;
   z-index: 2;
-  scrollbar-width: thin;
-  scrollbar-color: #6366f1 #2d2d36;
 }
 
-/* Custom scrollbar for the music list */
+/* Remove all scrollbar-related styles */
 .music-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.music-list::-webkit-scrollbar-track {
-  background: #2d2d36;
-  border-radius: 4px;
-}
-
-.music-list::-webkit-scrollbar-thumb {
-  background: #6366f1;
-  border-radius: 4px;
-}
-
-.music-list::-webkit-scrollbar-thumb:hover {
-  background: #818cf8;
+  display: none;
 }
 
 .music-card {
