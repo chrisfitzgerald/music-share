@@ -85,16 +85,38 @@ function createMusicCard(url, title) {
   return card;
 }
 
+function createShowMoreButton() {
+  const buttonContainer = document.createElement('div');
+  buttonContainer.className = 'show-more-container';
+  
+  const button = document.createElement('button');
+  button.className = 'show-more-button';
+  button.textContent = 'Show More';
+  button.addEventListener('click', loadMoreMusic);
+  
+  buttonContainer.appendChild(button);
+  return buttonContainer;
+}
+
 async function loadMoreMusic() {
   if (isLoading || !hasMore) return;
   
   isLoading = true;
+  const showMoreButton = document.querySelector('.show-more-button');
+  if (showMoreButton) {
+    showMoreButton.textContent = 'Loading...';
+    showMoreButton.disabled = true;
+  }
+  
   try {
-    const response = await fetch(`${API_URL}/music?page=${currentPage}&limit=10`);
+    const response = await fetch(`${API_URL}/music?page=${currentPage}&limit=20`);
     const data = await response.json();
     
     if (data.music.length === 0) {
       hasMore = false;
+      if (showMoreButton) {
+        showMoreButton.remove();
+      }
       return;
     }
     
@@ -103,7 +125,16 @@ async function loadMoreMusic() {
     
     if (newItems.length === 0) {
       hasMore = false;
+      if (showMoreButton) {
+        showMoreButton.remove();
+      }
       return;
+    }
+    
+    // Remove the old show more button
+    const oldButton = document.querySelector('.show-more-container');
+    if (oldButton) {
+      oldButton.remove();
     }
     
     newItems.forEach(({ url, title }) => {
@@ -114,33 +145,26 @@ async function loadMoreMusic() {
     
     currentPage++;
     hasMore = currentPage <= data.totalPages;
+    
+    // Add the show more button back if there are more items
+    if (hasMore) {
+      const buttonContainer = createShowMoreButton();
+      musicList.appendChild(buttonContainer);
+    }
   } catch (error) {
     console.error('Error loading more music:', error);
+    if (showMoreButton) {
+      showMoreButton.textContent = 'Error loading more. Click to retry.';
+      showMoreButton.disabled = false;
+    }
   } finally {
     isLoading = false;
   }
 }
 
-// Intersection Observer for infinite scroll
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting && hasMore) {
-      loadMoreMusic();
-    }
-  });
-}, {
-  rootMargin: '100px'
-});
-
-// Create and observe a sentinel element
-const sentinel = document.createElement('div');
-sentinel.id = 'sentinel';
-musicList.appendChild(sentinel);
-observer.observe(sentinel);
-
 async function renderMusicList() {
   try {
-    const response = await fetch(`${API_URL}/music?page=1&limit=10`);
+    const response = await fetch(`${API_URL}/music?page=1&limit=20`);
     const data = await response.json();
     
     musicList.innerHTML = '';
@@ -152,12 +176,14 @@ async function renderMusicList() {
       musicList.appendChild(card);
     });
     
-    // Add sentinel element back
-    musicList.appendChild(sentinel);
-    observer.observe(sentinel);
-    
     currentPage = 2;
     hasMore = currentPage <= data.totalPages;
+    
+    // Add show more button if there are more items
+    if (hasMore) {
+      const buttonContainer = createShowMoreButton();
+      musicList.appendChild(buttonContainer);
+    }
   } catch (error) {
     console.error('Error fetching music:', error);
     musicList.innerHTML = '<p class="error">Error loading music. Please try again later.</p>';
