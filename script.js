@@ -4,9 +4,13 @@ const titleInput = document.getElementById('music-title');
 const musicList = document.getElementById('music-list');
 const playerContainer = document.getElementById('player-container');
 const closePlayerBtn = document.getElementById('close-player');
+const searchInput = document.getElementById('search-input');
+const searchButton = document.getElementById('search-button');
+const randomButton = document.getElementById('random-button');
 
 // YouTube player instance
 let player = null;
+let allMusic = []; // Store all music items
 
 // Determine API URL based on current hostname
 const API_URL = window.location.hostname === 'localhost' 
@@ -315,5 +319,52 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-// Initial render
-renderMusicList(); 
+function searchMusic(query) {
+  query = query.toLowerCase();
+  const filteredMusic = allMusic.filter(item => 
+    item.title.toLowerCase().includes(query) || 
+    item.url.toLowerCase().includes(query)
+  );
+  renderMusicList(filteredMusic);
+}
+
+function playRandomMusic() {
+  const youtubeLinks = allMusic.filter(item => 
+    item.url.includes('youtube.com') || item.url.includes('youtu.be')
+  );
+  
+  if (youtubeLinks.length > 0) {
+    const randomIndex = Math.floor(Math.random() * youtubeLinks.length);
+    const randomMusic = youtubeLinks[randomIndex];
+    playYouTubeVideo(randomMusic.url);
+  }
+}
+
+// Event Listeners
+searchButton.addEventListener('click', () => {
+  searchMusic(searchInput.value);
+});
+
+searchInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    searchMusic(searchInput.value);
+  }
+});
+
+randomButton.addEventListener('click', playRandomMusic);
+
+// Initial load
+async function loadAllMusic() {
+  try {
+    const response = await fetch(`${API_URL}/music`);
+    const data = await response.json();
+    allMusic = data.music;
+    renderMusicList(allMusic);
+  } catch (error) {
+    console.error('Error loading music:', error);
+    musicList.innerHTML = '<p class="error">Error loading music. Please try again later.</p>';
+  }
+}
+
+// Initial load
+loadAllMusic(); 
