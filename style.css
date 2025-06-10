@@ -113,6 +113,8 @@ form button:focus-visible {
   text-decoration: none;
   color: inherit;
   min-height: 180px;
+  margin-bottom: 20px;
+  transition: transform 0.2s ease;
 }
 
 .music-card:hover {
@@ -164,6 +166,35 @@ form button:focus-visible {
 
 .music-link {
   display: none;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.music-card:hover .play-button {
+  opacity: 1;
+}
+
+.play-button:hover {
+  background: rgba(0, 0, 0, 0.9);
 }
 
 @media (max-width: 600px) {
@@ -225,4 +256,64 @@ form button:focus-visible {
 .show-more-button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+
+.player-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 10px;
+  z-index: 1000;
+  display: none;
+}
+
+.player-container.active {
+  display: block;
+}
+
+.player-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+#player {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+}
+
+.close-player {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.close-player:hover {
+  background: #ff0000;
+}
+
+.container {
+  margin-top: 20px;
+}
+
+/* Adjust container margin when player is active */
+.player-container.active + .container {
+  margin-top: calc(20px + 56.25vw); /* 16:9 aspect ratio */
+  max-width: 800px;
 } 

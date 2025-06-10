@@ -2,6 +2,11 @@ const form = document.getElementById('music-form');
 const urlInput = document.getElementById('music-url');
 const titleInput = document.getElementById('music-title');
 const musicList = document.getElementById('music-list');
+const playerContainer = document.getElementById('player-container');
+const closePlayerBtn = document.getElementById('close-player');
+
+// YouTube player instance
+let player = null;
 
 // Determine API URL based on current hostname
 const API_URL = window.location.hostname === 'localhost' 
@@ -16,6 +21,50 @@ let allLoadedItems = new Set(); // Keep track of loaded items to prevent duplica
 
 // Initially hide the title input
 titleInput.style.display = 'none';
+
+// YouTube API ready
+window.onYouTubeIframeAPIReady = function() {
+  player = new YT.Player('player', {
+    height: '100%',
+    width: '100%',
+    videoId: '',
+    playerVars: {
+      'playsinline': 1,
+      'controls': 1
+    },
+    events: {
+      'onReady': onPlayerReady
+    }
+  });
+};
+
+function onPlayerReady(event) {
+  // Player is ready
+}
+
+function getYouTubeId(url) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
+function playYouTubeVideo(url) {
+  const videoId = getYouTubeId(url);
+  if (videoId && player) {
+    player.loadVideoById(videoId);
+    playerContainer.classList.add('active');
+  }
+}
+
+function closePlayer() {
+  if (player) {
+    player.stopVideo();
+  }
+  playerContainer.classList.remove('active');
+}
+
+// Close player when clicking the close button
+closePlayerBtn.addEventListener('click', closePlayer);
 
 async function getTitleFromUrl(url) {
   try {
@@ -60,11 +109,13 @@ function getCoverArt(url) {
 }
 
 function createMusicCard(url, title) {
-  const card = document.createElement('a');
+  const card = document.createElement('div');
   card.className = 'music-card';
-  card.href = url;
-  card.target = '_blank';
-  card.rel = 'noopener noreferrer';
+  
+  const link = document.createElement('a');
+  link.href = url;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
   
   const cover = document.createElement('img');
   cover.className = 'music-cover';
@@ -79,9 +130,22 @@ function createMusicCard(url, title) {
   titleEl.textContent = title || url;
   
   info.appendChild(titleEl);
-  card.appendChild(cover);
-  card.appendChild(info);
+  link.appendChild(cover);
+  link.appendChild(info);
   
+  // Add play button for YouTube links
+  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    const playButton = document.createElement('button');
+    playButton.className = 'play-button';
+    playButton.innerHTML = '▶';
+    playButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      playYouTubeVideo(url);
+    });
+    card.appendChild(playButton);
+  }
+  
+  card.appendChild(link);
   return card;
 }
 
