@@ -10,13 +10,23 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection with error handling
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/music-share', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.error('MongoDB connection error:', err));
+// MongoDB connection with better options and error handling
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/music-share', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    process.exit(1);
+  }
+};
+
+connectDB();
 
 // Music Schema
 const musicSchema = new mongoose.Schema({
@@ -30,8 +40,24 @@ const Music = mongoose.model('Music', musicSchema);
 // Routes
 app.get('/api/music', async (req, res) => {
   try {
-    const music = await Music.find().sort({ createdAt: -1 });
-    res.json(music);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const [music, total] = await Promise.all([
+      Music.find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Music.countDocuments()
+    ]);
+
+    res.json({
+      music,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total
+    });
   } catch (error) {
     console.error('Error fetching music:', error);
     res.status(500).json({ error: 'Error fetching music', details: error.message });

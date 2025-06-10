@@ -8,6 +8,11 @@ const API_URL = window.location.hostname === 'localhost'
   ? 'http://localhost:3000/api' 
   : '/api';
 
+// Pagination state
+let currentPage = 1;
+let isLoading = false;
+let hasMore = true;
+
 // Initially hide the title input
 titleInput.style.display = 'none';
 
@@ -53,36 +58,93 @@ function getCoverArt(url) {
   return 'https://cdn-icons-png.flaticon.com/512/727/727245.png';
 }
 
+function createMusicCard(url, title) {
+  const card = document.createElement('a');
+  card.className = 'music-card';
+  card.href = url;
+  card.target = '_blank';
+  card.rel = 'noopener noreferrer';
+  
+  const cover = document.createElement('img');
+  cover.className = 'music-cover';
+  cover.src = getCoverArt(url);
+  cover.alt = 'cover';
+  
+  const info = document.createElement('div');
+  info.className = 'music-info';
+  
+  const titleEl = document.createElement('div');
+  titleEl.className = 'music-title';
+  titleEl.textContent = title || url;
+  
+  info.appendChild(titleEl);
+  card.appendChild(cover);
+  card.appendChild(info);
+  
+  return card;
+}
+
+async function loadMoreMusic() {
+  if (isLoading || !hasMore) return;
+  
+  isLoading = true;
+  try {
+    const response = await fetch(`${API_URL}/music?page=${currentPage}&limit=10`);
+    const data = await response.json();
+    
+    if (data.music.length === 0) {
+      hasMore = false;
+      return;
+    }
+    
+    data.music.forEach(({ url, title }) => {
+      const card = createMusicCard(url, title);
+      musicList.appendChild(card);
+    });
+    
+    currentPage++;
+    hasMore = currentPage <= data.totalPages;
+  } catch (error) {
+    console.error('Error loading more music:', error);
+  } finally {
+    isLoading = false;
+  }
+}
+
+// Intersection Observer for infinite scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && hasMore) {
+      loadMoreMusic();
+    }
+  });
+}, {
+  rootMargin: '100px'
+});
+
+// Create and observe a sentinel element
+const sentinel = document.createElement('div');
+sentinel.id = 'sentinel';
+musicList.appendChild(sentinel);
+observer.observe(sentinel);
+
 async function renderMusicList() {
   try {
-    const response = await fetch(`${API_URL}/music`);
-    const items = await response.json();
+    const response = await fetch(`${API_URL}/music?page=1&limit=10`);
+    const data = await response.json();
     
     musicList.innerHTML = '';
-    for (const { url, title } of items) {
-      const card = document.createElement('a');
-      card.className = 'music-card';
-      card.href = url;
-      card.target = '_blank';
-      card.rel = 'noopener noreferrer';
-      
-      const cover = document.createElement('img');
-      cover.className = 'music-cover';
-      cover.src = getCoverArt(url);
-      cover.alt = 'cover';
-      
-      const info = document.createElement('div');
-      info.className = 'music-info';
-      
-      const titleEl = document.createElement('div');
-      titleEl.className = 'music-title';
-      titleEl.textContent = title || url;
-      
-      info.appendChild(titleEl);
-      card.appendChild(cover);
-      card.appendChild(info);
+    data.music.forEach(({ url, title }) => {
+      const card = createMusicCard(url, title);
       musicList.appendChild(card);
-    }
+    });
+    
+    // Add sentinel element back
+    musicList.appendChild(sentinel);
+    observer.observe(sentinel);
+    
+    currentPage = 2;
+    hasMore = currentPage <= data.totalPages;
   } catch (error) {
     console.error('Error fetching music:', error);
     musicList.innerHTML = '<p class="error">Error loading music. Please try again later.</p>';
@@ -139,6 +201,10 @@ form.addEventListener('submit', async (e) => {
     titleInput.value = '';
     titleInput.style.display = 'none';
     titleInput.required = false;
+    
+    // Reset pagination and reload the list
+    currentPage = 1;
+    hasMore = true;
     renderMusicList();
   } catch (error) {
     console.error('Error saving music:', error);
