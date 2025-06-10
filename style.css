@@ -385,4 +385,8 @@ form button:focus-visible {
 
 .random-button:hover {
   background-color: #1976D2;
+}
+
+#music-form {
+  display: none;
 } 
