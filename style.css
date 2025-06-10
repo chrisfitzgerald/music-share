@@ -8,7 +8,7 @@ body {
 }
 
 .container {
-  max-width: 500px;
+  max-width: 800px;
   margin: 40px auto;
   background: #23232a;
   border-radius: 16px;
@@ -96,6 +96,29 @@ form button:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-top: 20px;
+}
+
+/* Custom scrollbar for the music list */
+.music-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.music-list::-webkit-scrollbar-track {
+  background: #2d2d36;
+  border-radius: 4px;
+}
+
+.music-list::-webkit-scrollbar-thumb {
+  background: #6366f1;
+  border-radius: 4px;
+}
+
+.music-list::-webkit-scrollbar-thumb:hover {
+  background: #818cf8;
 }
 
 .music-card {
