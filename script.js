@@ -12,6 +12,7 @@ const API_URL = window.location.hostname === 'localhost'
 let currentPage = 1;
 let isLoading = false;
 let hasMore = true;
+let allLoadedItems = new Set(); // Keep track of loaded items to prevent duplicates
 
 // Initially hide the title input
 titleInput.style.display = 'none';
@@ -97,7 +98,16 @@ async function loadMoreMusic() {
       return;
     }
     
-    data.music.forEach(({ url, title }) => {
+    // Filter out any items we've already loaded
+    const newItems = data.music.filter(item => !allLoadedItems.has(item.url));
+    
+    if (newItems.length === 0) {
+      hasMore = false;
+      return;
+    }
+    
+    newItems.forEach(({ url, title }) => {
+      allLoadedItems.add(url);
       const card = createMusicCard(url, title);
       musicList.appendChild(card);
     });
@@ -134,7 +144,10 @@ async function renderMusicList() {
     const data = await response.json();
     
     musicList.innerHTML = '';
+    allLoadedItems.clear(); // Clear the set of loaded items
+    
     data.music.forEach(({ url, title }) => {
+      allLoadedItems.add(url);
       const card = createMusicCard(url, title);
       musicList.appendChild(card);
     });
