@@ -305,12 +305,12 @@ form button:focus-visible {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(184, 45, 45, 0.5);
   color: white;
   border: none;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
   font-size: 20px;
   cursor: pointer;
   z-index: 1001;
@@ -321,7 +321,7 @@ form button:focus-visible {
 }
 
 .close-player:hover {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(161, 11, 11, 0.8);
 }
 
 .container {
