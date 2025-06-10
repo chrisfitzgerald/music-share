@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Share</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎵 Music Share</h1>
+    <form id="music-form">
+      <input type="url" id="music-url" placeholder="Paste your music link (Spotify, YouTube, etc.)" required>
+      <input type="text" id="music-title" placeholder="Title (will be auto-filled if left empty)">
+      <button type="submit">Add</button>
+    </form>
+    <div id="music-list" class="music-list"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html> 

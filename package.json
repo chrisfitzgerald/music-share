@@ -1,0 +1,22 @@
+{
+  "name": "music-share",
+  "version": "1.0.0",
+  "description": "A music sharing application with MongoDB storage",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node api/index.js",
+    "dev": "nodemon api/index.js"
+  },
+  "dependencies": {
+    "-": "^0.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongodb": "^6.17.0",
+    "mongoose": "^7.5.0",
+    "vercel": "^42.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
