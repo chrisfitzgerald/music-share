@@ -3,9 +3,10 @@ const urlInput = document.getElementById('music-url');
 const titleInput = document.getElementById('music-title');
 const musicList = document.getElementById('music-list');
 
-const API_URL = process.env.NODE_ENV === 'production' 
-  ? '/api' 
-  : 'http://localhost:3000/api';
+// Determine API URL based on current hostname
+const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:3000/api' 
+  : '/api';
 
 // Initially hide the title input
 titleInput.style.display = 'none';
