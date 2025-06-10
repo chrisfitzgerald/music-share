@@ -258,38 +258,13 @@ async function renderMusicList() {
   }
 }
 
+// Add form submission handler
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const url = urlInput.value.trim();
+  const title = titleInput.value.trim();
+  
   if (!url) return;
-  
-  let title = titleInput.value.trim();
-  
-  // If no title provided, try to fetch it
-  if (!title) {
-    titleInput.style.display = 'none';
-    titleInput.required = false;
-    
-    // Show loading state
-    const submitButton = form.querySelector('button[type="submit"]');
-    const originalButtonText = submitButton.textContent;
-    submitButton.textContent = 'Fetching title...';
-    submitButton.disabled = true;
-    
-    title = await getTitleFromUrl(url);
-    
-    // Reset button state
-    submitButton.textContent = originalButtonText;
-    submitButton.disabled = false;
-    
-    // If title fetch failed, show the title input
-    if (!title) {
-      titleInput.style.display = 'block';
-      titleInput.required = true;
-      titleInput.focus();
-      return; // Prevent form submission until title is provided
-    }
-  }
   
   try {
     const response = await fetch(`${API_URL}/music`, {
@@ -300,23 +275,20 @@ form.addEventListener('submit', async (e) => {
       body: JSON.stringify({ url, title }),
     });
     
-    if (!response.ok) {
-      throw new Error('Failed to save music');
+    if (response.ok) {
+      urlInput.value = '';
+      titleInput.value = '';
+      titleInput.style.display = 'none';
+      renderMusicList(); // Refresh the list
     }
-    
-    urlInput.value = '';
-    titleInput.value = '';
-    titleInput.style.display = 'none';
-    titleInput.required = false;
-    
-    // Reset pagination and reload the list
-    currentPage = 1;
-    hasMore = true;
-    renderMusicList();
   } catch (error) {
-    console.error('Error saving music:', error);
-    alert('Failed to save music. Please try again.');
+    console.error('Error adding music:', error);
   }
+});
+
+// Load initial music list when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+  renderMusicList();
 });
 
 function searchMusic(query) {
