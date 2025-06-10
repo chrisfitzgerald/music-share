@@ -5,6 +5,7 @@ body {
   margin: 0;
   min-height: 100vh;
   color-scheme: dark;
+  overflow-x: hidden;
 }
 
 .container {
@@ -17,6 +18,7 @@ body {
   text-align: center;
   position: relative;
   z-index: 1;
+  overflow: visible;
 }
 
 h1 {
@@ -104,11 +106,13 @@ form button:focus-visible {
   margin-top: 20px;
   position: relative;
   z-index: 2;
+  scrollbar-width: thin;
+  scrollbar-color: #6366f1 #2d2d36;
 }
 
 /* Custom scrollbar for the music list */
 .music-list::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .music-list::-webkit-scrollbar-track {
