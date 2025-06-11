@@ -226,9 +226,11 @@ form button:focus-visible {
   padding: 0.8rem;
   border-radius: 8px;
   display: inline-block;
+  width: auto;
   max-width: 100%;
   height: fit-content;
   margin-top: 1rem;
+  box-sizing: border-box;
 }
 
 .music-info h3 {
@@ -239,6 +241,9 @@ form button:focus-visible {
   overflow-wrap: break-word;
   hyphens: auto;
   line-height: 1.4;
+  width: auto;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .music-meta {
@@ -306,10 +311,13 @@ form button:focus-visible {
   .music-info {
     padding: 0.6rem;
     margin-top: 0.8rem;
+    width: auto;
+    max-width: calc(100% - 2rem);
   }
-  .music-title {
+  .music-info h3 {
     font-size: 0.95rem;
     line-height: 1.3;
+    padding-right: 0.5rem;
   }
   form {
     flex-direction: column;
