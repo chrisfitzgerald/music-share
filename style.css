@@ -1,6 +1,7 @@
 :root {
   /* Base colors */
-  --bg: #100F0F;      /* black */
+  --bg: #100F0F;
+  --bgop: hsla(0, 6%, 6%, 0.7); /* black opacity .8 */
   --bg-2: #1C1B1A;    /* base-950 */
   --ui: #282726;      /* base-900 */
   --ui-2: #343331;    /* base-850 */
@@ -221,8 +222,7 @@ form button:focus-visible {
   text-align: left;
   position: relative;
   z-index: 2;
-  background: var(--bg);
-  opacity: 0.5;
+  background: var(--bgop);
   padding: 0.8rem;
   border-radius: 8px;
   display: inline-block;
@@ -374,7 +374,6 @@ form button:focus-visible {
 
 .player-wrapper {
   width: 100%;
-  max-width: 800px;
   height: 100%;
   position: relative;
   margin: 0 auto;
@@ -469,7 +468,7 @@ form button:focus-visible {
   padding: 0.7rem 1.2rem;
   border: none;
   border-radius: 8px;
-  background: var(--gr);
+  background: var(--ui);
   color: var(--bg);
   font-weight: bold;
   cursor: pointer;
@@ -486,7 +485,7 @@ form button:focus-visible {
   padding: 0.7rem 1.2rem;
   border: none;
   border-radius: 8px;
-  background: var(--gr);
+  background: var(--ui);
   color: var(--bg);
   font-weight: bold;
   cursor: pointer;
@@ -500,7 +499,7 @@ form button:focus-visible {
 }
 
 .sort-button:hover {
-  background: var(--ye);
+  background: var(--or);
 }
 
 #music-form {
