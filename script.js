@@ -323,30 +323,39 @@ document.addEventListener('DOMContentLoaded', () => {
   renderMusicList();
 });
 
-function searchMusic(query) {
+async function searchMusic(query) {
   query = query.toLowerCase();
   
   // Clear the current list
   musicList.innerHTML = '';
   
-  // Filter all music items
-  const filteredMusic = allMusic.filter(item => 
-    item.title.toLowerCase().includes(query) || 
-    item.sharedBy.toLowerCase().includes(query)
-  );
-  
-  // Render filtered results
-  filteredMusic.forEach(({ url, title, sharedBy }) => {
-    const card = createMusicCard(url, title, sharedBy);
-    musicList.appendChild(card);
-  });
-  
-  // If no results, show a message
-  if (filteredMusic.length === 0) {
-    const noResults = document.createElement('div');
-    noResults.className = 'no-results';
-    noResults.textContent = 'No results found';
-    musicList.appendChild(noResults);
+  try {
+    // Query the database directly
+    const response = await fetch(`${API_URL}/music/search?q=${encodeURIComponent(query)}`);
+    const data = await response.json();
+    
+    // Update allMusic with search results
+    allMusic = data.music;
+    
+    // Render filtered results
+    data.music.forEach(({ url, title, sharedBy }) => {
+      const card = createMusicCard(url, title, sharedBy);
+      musicList.appendChild(card);
+    });
+    
+    // If no results, show a message
+    if (data.music.length === 0) {
+      const noResults = document.createElement('div');
+      noResults.className = 'no-results';
+      noResults.textContent = 'No results found';
+      musicList.appendChild(noResults);
+    }
+  } catch (error) {
+    console.error('Error searching music:', error);
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'no-results';
+    errorMessage.textContent = 'Error searching music';
+    musicList.appendChild(errorMessage);
   }
 }
 

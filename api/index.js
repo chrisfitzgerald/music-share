@@ -136,6 +136,33 @@ app.post('/api/music/bulk', async (req, res) => {
   }
 });
 
+// Add the search endpoint
+app.get('/api/music/search', async (req, res) => {
+  try {
+    const query = req.query.q;
+    if (!query) {
+      return res.status(400).json({ error: 'Search query is required' });
+    }
+
+    // Create a case-insensitive search query
+    const searchQuery = {
+      $or: [
+        { title: { $regex: query, $options: 'i' } },
+        { sharedBy: { $regex: query, $options: 'i' } }
+      ]
+    };
+
+    const music = await Music.find(searchQuery)
+      .sort({ createdAt: -1 })
+      .limit(100); // Limit results to prevent overwhelming the client
+
+    res.json({ music });
+  } catch (error) {
+    console.error('Error searching music:', error);
+    res.status(500).json({ error: 'Error searching music', details: error.message });
+  }
+});
+
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '..')));
