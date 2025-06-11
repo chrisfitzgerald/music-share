@@ -143,11 +143,6 @@ function createMusicCard(url, title, sharedBy) {
   const card = document.createElement('div');
   card.className = 'music-card';
   
-  const link = document.createElement('a');
-  link.href = url;
-  link.target = '_blank';
-  link.rel = 'noopener noreferrer';
-  
   const cover = document.createElement('img');
   cover.className = 'music-cover';
   cover.src = getCoverArt(url);
@@ -166,22 +161,24 @@ function createMusicCard(url, title, sharedBy) {
   
   info.appendChild(titleEl);
   info.appendChild(sharedByEl);
-  link.appendChild(cover);
-  link.appendChild(info);
+  card.appendChild(cover);
+  card.appendChild(info);
   
-  // Add play button for YouTube links
-  if (url.includes('youtube.com') || url.includes('youtu.be')) {
-    const playButton = document.createElement('button');
-    playButton.className = 'play-button';
-    playButton.innerHTML = '▶';
-    playButton.addEventListener('click', (e) => {
-      e.preventDefault();
+  // Add click handler for the entire card
+  card.addEventListener('click', (e) => {
+    // Check if the click was on the link indicator (top-right corner)
+    const rect = card.getBoundingClientRect();
+    const isLinkClick = e.clientX > rect.right - 24 && e.clientY < rect.top + 24;
+    
+    if (isLinkClick) {
+      // Open the original link in a new tab
+      window.open(url, '_blank');
+    } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      // Play the video in the embedded player
       playYouTubeVideo(url);
-    });
-    card.appendChild(playButton);
-  }
+    }
+  });
   
-  card.appendChild(link);
   return card;
 }
 
