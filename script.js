@@ -489,7 +489,7 @@ randomButton.addEventListener('click', playRandomMusic);
 // Initial load
 async function loadAllMusic() {
   try {
-    const response = await fetch(`${API_URL}/music`);
+    const response = await fetch(`${API_URL}/music/all`);
     const data = await response.json();
     allMusic = data.music;
   } catch (error) {

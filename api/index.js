@@ -187,6 +187,17 @@ app.get('/api/music/random', async (req, res) => {
   }
 });
 
+// New endpoint to get all music for stats
+app.get('/api/music/all', async (req, res) => {
+  try {
+    const music = await Music.find().sort({ sharedAt: -1 }); // Default sort by newest
+    res.json({ music });
+  } catch (error) {
+    console.error('Error fetching all music:', error);
+    res.status(500).json({ error: 'Error fetching all music', details: error.message });
+  }
+});
+
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '..')));
