@@ -164,6 +164,13 @@ function createMusicCard(url, title, sharedBy) {
   card.appendChild(cover);
   card.appendChild(info);
   
+  // Add play overlay for YouTube links
+  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    const playOverlay = document.createElement('div');
+    playOverlay.className = 'play-overlay';
+    card.appendChild(playOverlay);
+  }
+  
   // Add click handler for the entire card
   card.addEventListener('click', (e) => {
     // Check if the click was on the right side of the card

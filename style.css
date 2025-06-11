@@ -152,9 +152,30 @@ form button:focus-visible {
   margin-bottom: 20px;
 }
 
-.music-card:hover {
-  box-shadow: 0 4px 16px rgba(58, 169, 159, 0.15);
-  transform: translateY(-2px);
+.play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% - 64px); /* Full width minus the link area */
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 3;
+}
+
+.play-overlay::before {
+  content: '▶';
+  color: var(--tx);
+  font-size: 48px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.music-card:hover .play-overlay {
+  opacity: 1;
 }
 
 .music-card::after {
@@ -172,6 +193,7 @@ form button:focus-visible {
   font-size: 24px;
   opacity: 0;
   transition: opacity 0.2s ease;
+  z-index: 3;
 }
 
 .music-card:hover::after {
@@ -191,7 +213,7 @@ form button:focus-visible {
 }
 
 .music-card:hover .music-cover {
-  opacity: 0.2;
+  opacity: 0.8;
 }
 
 .music-info {
