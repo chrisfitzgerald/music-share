@@ -148,8 +148,13 @@ function createMusicCard(music) {
   
   const cover = document.createElement('img');
   cover.className = 'music-cover';
-  cover.src = music.coverUrl || 'https://via.placeholder.com/150';
+  const coverSrc = getCoverArt(music.url) || 'https://via.placeholder.com/150';
+  cover.src = coverSrc;
   cover.alt = 'cover';
+
+  console.log('Music card creation:');
+  console.log('Music URL:', music.url);
+  console.log('Cover Image URL:', coverSrc);
   
   const infoDiv = document.createElement('div');
   infoDiv.className = 'music-info';

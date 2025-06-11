@@ -139,6 +139,7 @@ form button:focus-visible {
   border-radius: 12px;
   padding: 1.5rem;
   display: flex;
+  flex-direction: row;
   align-items: flex-start;
   gap: 1rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -148,7 +149,7 @@ form button:focus-visible {
   cursor: pointer;
   text-decoration: none;
   color: inherit;
-  min-height: 180px;
+  min-height: 150px;
   margin-bottom: 20px;
 }
 
@@ -156,7 +157,7 @@ form button:focus-visible {
   position: absolute;
   top: 0;
   left: 0;
-  width: calc(100% - 64px); /* Full width minus the link area */
+  width: 150px;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
@@ -201,25 +202,23 @@ form button:focus-visible {
 }
 
 .music-cover {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
   object-fit: cover;
-  z-index: 1;
-  opacity: 0.7;
+  flex-shrink: 0;
+  opacity: 0.9;
   transition: opacity 0.2s ease;
 }
 
 .music-card:hover .music-cover {
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .music-info {
-  padding: 1rem;
   flex: 1;
   min-width: 0;
+  padding: 0;
 }
 
 .music-info h3 {
