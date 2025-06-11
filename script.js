@@ -187,7 +187,7 @@ function createMusicCard(music) {
       window.open(music.url, '_blank');
     } else {
       // Play in embedded player
-      playMusic(music);
+      playYouTubeVideo(music.url);
     }
   });
   
