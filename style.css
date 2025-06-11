@@ -226,7 +226,7 @@ form button:focus-visible {
   padding: 0.8rem;
   border-radius: 8px;
   display: inline-block;
-  max-width: fit-content;
+  max-width: 100%;
   height: fit-content;
   margin-top: 1rem;
 }
@@ -235,9 +235,10 @@ form button:focus-visible {
   margin: 0 0 0.5rem 0;
   font-size: 1.1rem;
   color: var(--tx);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.4;
 }
 
 .music-meta {
