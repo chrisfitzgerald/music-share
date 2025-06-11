@@ -336,17 +336,17 @@ form button:focus-visible {
 
 .show-more-button {
   background-color: var(--or);
-  color: white;
+  color: var(--bg);
   padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
 }
 
 .show-more-button:hover {
-  background-color: var(--or);
+  background-color: var(--pu);
 }
 
 .show-more-button:disabled {
@@ -478,7 +478,7 @@ form button:focus-visible {
 }
 
 .random-button:hover {
-  background: var(--ye);
+  background: var(--pu);
 }
 
 .sort-button {
@@ -499,7 +499,7 @@ form button:focus-visible {
 }
 
 .sort-button:hover {
-  background: var(--or);
+  background: var(--pu);
 }
 
 #music-form {
