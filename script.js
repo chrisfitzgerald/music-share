@@ -492,7 +492,6 @@ async function loadAllMusic() {
     const response = await fetch(`${API_URL}/music`);
     const data = await response.json();
     allMusic = data.music;
-    renderMusicList(allMusic);
   } catch (error) {
     console.error('Error loading music:', error);
     musicList.innerHTML = '<p class="error">Error loading music. Please try again later.</p>';

@@ -552,7 +552,7 @@ form button:focus-visible {
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
   background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
-  display: flex;
+  /* display: flex; */ /* Removed to prevent modal from showing on page load */
   align-items: center;
   justify-content: center;
 }
