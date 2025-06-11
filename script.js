@@ -151,21 +151,18 @@ function createMusicCard(url, title, sharedBy) {
   cover.src = getCoverArt(url);
   cover.alt = 'cover';
   
-  const info = document.createElement('div');
-  info.className = 'music-info';
+  const infoDiv = document.createElement('div');
+  infoDiv.className = 'music-info';
+  infoDiv.innerHTML = `
+    <h3>${title}</h3>
+    <p class="music-meta">
+      <span class="shared-by">Shared by ${sharedBy}</span>
+      <span class="shared-date">${new Date(sharedAt).toLocaleDateString()}</span>
+    </p>
+  `;
   
-  const titleEl = document.createElement('div');
-  titleEl.className = 'music-title';
-  titleEl.textContent = title || url;
-  
-  const sharedByEl = document.createElement('div');
-  sharedByEl.className = 'music-shared-by';
-  sharedByEl.textContent = `Shared by: ${sharedBy}`;
-  
-  info.appendChild(titleEl);
-  info.appendChild(sharedByEl);
   card.appendChild(cover);
-  card.appendChild(info);
+  card.appendChild(infoDiv);
   
   // Add play overlay for YouTube links
   if (url.includes('youtube.com') || url.includes('youtu.be')) {

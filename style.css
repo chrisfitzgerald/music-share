@@ -217,17 +217,33 @@ form button:focus-visible {
 }
 
 .music-info {
+  padding: 1rem;
   flex: 1;
-  text-align: left;
-  position: relative;
-  z-index: 2;
-  background: linear-gradient(to right, var(--ui-2), var(--ui-3));
-  padding: 0.8rem;
-  border-radius: 8px;
-  display: inline-block;
-  max-width: fit-content;
-  height: fit-content;
-  margin-top: 1rem;
+  min-width: 0;
+}
+
+.music-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: var(--tx);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.music-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--tx2);
+}
+
+.shared-by, .shared-date {
+  white-space: nowrap;
+}
+
+.shared-date {
+  color: var(--tx3);
 }
 
 .music-title {
