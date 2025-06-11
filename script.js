@@ -359,15 +359,20 @@ async function searchMusic(query) {
   }
 }
 
-function playRandomMusic() {
-  const cards = document.querySelectorAll('.music-card');
-  if (cards.length > 0) {
-    const randomIndex = Math.floor(Math.random() * cards.length);
-    const randomCard = cards[randomIndex];
-    const playButton = randomCard.querySelector('.play-button');
-    if (playButton) {
-      playButton.click();
+async function playRandomMusic() {
+  try {
+    // Get a random music item from the database
+    const response = await fetch(`${API_URL}/music/random`);
+    const data = await response.json();
+    
+    if (data.music) {
+      const { url, title } = data.music;
+      playYouTubeVideo(url);
+    } else {
+      console.error('No music found');
     }
+  } catch (error) {
+    console.error('Error playing random music:', error);
   }
 }
 

@@ -163,6 +163,29 @@ app.get('/api/music/search', async (req, res) => {
   }
 });
 
+// Add the random endpoint
+app.get('/api/music/random', async (req, res) => {
+  try {
+    // Get total count of documents
+    const count = await Music.countDocuments();
+    
+    if (count === 0) {
+      return res.json({ music: null });
+    }
+    
+    // Generate a random skip value
+    const random = Math.floor(Math.random() * count);
+    
+    // Find one random document
+    const music = await Music.findOne().skip(random);
+    
+    res.json({ music });
+  } catch (error) {
+    console.error('Error getting random music:', error);
+    res.status(500).json({ error: 'Error getting random music', details: error.message });
+  }
+});
+
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '..')));
