@@ -227,7 +227,7 @@ form button:focus-visible {
   border-radius: 8px;
   display: inline-block;
   width: auto;
-  max-width: calc(100% - 200px);
+  max-width: 50%;
   height: fit-content;
   margin-top: 1rem;
   box-sizing: border-box;
