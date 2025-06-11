@@ -184,6 +184,16 @@ form button:focus-visible {
   font-style: italic;
 }
 
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: #a1a1aa;
+  font-style: italic;
+  background: #2d2d36;
+  border-radius: 12px;
+  margin: 1rem 0;
+}
+
 .music-link {
   display: none;
 }

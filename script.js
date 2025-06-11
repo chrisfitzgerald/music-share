@@ -325,14 +325,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function searchMusic(query) {
   query = query.toLowerCase();
-  const cards = document.querySelectorAll('.music-card');
   
-  cards.forEach(card => {
-    const title = card.querySelector('.music-title').textContent.toLowerCase();
-    const sharedBy = card.querySelector('.music-shared-by').textContent.toLowerCase();
-    const isVisible = title.includes(query) || sharedBy.includes(query);
-    card.style.display = isVisible ? 'flex' : 'none';
+  // Clear the current list
+  musicList.innerHTML = '';
+  
+  // Filter all music items
+  const filteredMusic = allMusic.filter(item => 
+    item.title.toLowerCase().includes(query) || 
+    item.sharedBy.toLowerCase().includes(query)
+  );
+  
+  // Render filtered results
+  filteredMusic.forEach(({ url, title, sharedBy }) => {
+    const card = createMusicCard(url, title, sharedBy);
+    musicList.appendChild(card);
   });
+  
+  // If no results, show a message
+  if (filteredMusic.length === 0) {
+    const noResults = document.createElement('div');
+    noResults.className = 'no-results';
+    noResults.textContent = 'No results found';
+    musicList.appendChild(noResults);
+  }
 }
 
 function playRandomMusic() {
