@@ -166,9 +166,9 @@ function createMusicCard(url, title, sharedBy) {
   
   // Add click handler for the entire card
   card.addEventListener('click', (e) => {
-    // Check if the click was on the link indicator (top-right corner)
+    // Check if the click was on the right side of the card
     const rect = card.getBoundingClientRect();
-    const isLinkClick = e.clientX > rect.right - 24 && e.clientY < rect.top + 24;
+    const isLinkClick = e.clientX > rect.right - 64; // Match the width of the ::after element
     
     if (isLinkClick) {
       // Open the original link in a new tab
