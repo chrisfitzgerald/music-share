@@ -32,8 +32,14 @@ connectDB();
 const musicSchema = new mongoose.Schema({
   url: { type: String, required: true },
   title: { type: String, required: true },
+  sharedBy: { type: String, required: true },
+  sharedAt: { type: Date, required: true },
   createdAt: { type: Date, default: Date.now }
 });
+
+// Add indexes for better performance
+musicSchema.index({ sharedAt: -1 });
+musicSchema.index({ sharedBy: 1 });
 
 const Music = mongoose.model('Music', musicSchema);
 
@@ -78,6 +84,55 @@ app.post('/api/music', async (req, res) => {
   } catch (error) {
     console.error('Error saving music:', error);
     res.status(500).json({ error: 'Error saving music', details: error.message });
+  }
+});
+
+// Add the bulk import endpoint
+app.post('/api/music/bulk', async (req, res) => {
+  try {
+    const { items } = req.body;
+    
+    if (!Array.isArray(items)) {
+      return res.status(400).json({ error: 'Items must be an array' });
+    }
+
+    // Validate each item
+    const validItems = items.filter(item => {
+      return item.url && item.title && item.sharedBy && item.sharedAt;
+    });
+
+    if (validItems.length === 0) {
+      return res.status(400).json({ error: 'No valid items to import' });
+    }
+
+    // Process items in batches of 100
+    const batchSize = 100;
+    const results = {
+      total: items.length,
+      valid: validItems.length,
+      imported: 0,
+      errors: []
+    };
+
+    for (let i = 0; i < validItems.length; i += batchSize) {
+      const batch = validItems.slice(i, i + batchSize);
+      try {
+        const docs = await Music.insertMany(batch, { ordered: false });
+        results.imported += docs.length;
+      } catch (error) {
+        if (error.writeErrors) {
+          results.errors.push(...error.writeErrors.map(e => ({
+            url: batch[e.index].url,
+            error: e.errmsg
+          })));
+        }
+      }
+    }
+
+    res.json(results);
+  } catch (error) {
+    console.error('Error bulk importing music:', error);
+    res.status(500).json({ error: 'Error bulk importing music', details: error.message });
   }
 });
 

@@ -177,6 +177,13 @@ form button:focus-visible {
   max-width: fit-content;
 }
 
+.music-shared-by {
+  font-size: 0.9rem;
+  color: #a1a1aa;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
 .music-link {
   display: none;
 }

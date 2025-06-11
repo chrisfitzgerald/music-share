@@ -139,7 +139,7 @@ function getCoverArt(url) {
   return 'https://cdn-icons-png.flaticon.com/512/727/727245.png';
 }
 
-function createMusicCard(url, title) {
+function createMusicCard(url, title, sharedBy) {
   const card = document.createElement('div');
   card.className = 'music-card';
   
@@ -160,7 +160,12 @@ function createMusicCard(url, title) {
   titleEl.className = 'music-title';
   titleEl.textContent = title || url;
   
+  const sharedByEl = document.createElement('div');
+  sharedByEl.className = 'music-shared-by';
+  sharedByEl.textContent = `Shared by: ${sharedBy}`;
+  
   info.appendChild(titleEl);
+  info.appendChild(sharedByEl);
   link.appendChild(cover);
   link.appendChild(info);
   
@@ -232,9 +237,9 @@ async function loadMoreMusic() {
       oldButton.remove();
     }
     
-    newItems.forEach(({ url, title }) => {
+    newItems.forEach(({ url, title, sharedBy }) => {
       allLoadedItems.add(url);
-      const card = createMusicCard(url, title);
+      const card = createMusicCard(url, title, sharedBy);
       musicList.appendChild(card);
     });
     
@@ -265,9 +270,9 @@ async function renderMusicList() {
     musicList.innerHTML = '';
     allLoadedItems.clear(); // Clear the set of loaded items
     
-    data.music.forEach(({ url, title }) => {
+    data.music.forEach(({ url, title, sharedBy }) => {
       allLoadedItems.add(url);
-      const card = createMusicCard(url, title);
+      const card = createMusicCard(url, title, sharedBy);
       musicList.appendChild(card);
     });
     
@@ -320,11 +325,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function searchMusic(query) {
   query = query.toLowerCase();
-  const filteredMusic = allMusic.filter(item => 
-    item.title.toLowerCase().includes(query) || 
-    item.url.toLowerCase().includes(query)
-  );
-  renderMusicList(filteredMusic);
+  const cards = document.querySelectorAll('.music-card');
+  
+  cards.forEach(card => {
+    const title = card.querySelector('.music-title').textContent.toLowerCase();
+    const sharedBy = card.querySelector('.music-shared-by').textContent.toLowerCase();
+    const isVisible = title.includes(query) || sharedBy.includes(query);
+    card.style.display = isVisible ? 'flex' : 'none';
+  });
 }
 
 function playRandomMusic() {
