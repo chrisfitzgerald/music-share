@@ -7,6 +7,11 @@ const closePlayerBtn = document.getElementById('close-player');
 const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
 const randomButton = document.getElementById('random-button');
+const sortButton = document.getElementById('sort-button');
+const statsButton = document.getElementById('stats-button');
+const statsModal = document.getElementById('stats-modal');
+const closeModalBtn = statsModal.querySelector('.close-button');
+const statsBody = document.getElementById('stats-body');
 
 // YouTube player instance
 let player = null;
@@ -99,6 +104,61 @@ function closePlayer() {
 
 // Close player when clicking the close button
 closePlayerBtn.addEventListener('click', closePlayer);
+
+// Open stats modal
+statsButton.addEventListener('click', () => {
+  statsModal.style.display = 'flex';
+  fetchAndDisplayStats();
+});
+
+// Close stats modal
+closeModalBtn.addEventListener('click', () => {
+  statsModal.style.display = 'none';
+});
+
+// Close modal if user clicks outside of it
+window.addEventListener('click', (event) => {
+  if (event.target == statsModal) {
+    statsModal.style.display = 'none';
+  }
+});
+
+async function fetchAndDisplayStats() {
+  statsBody.innerHTML = '<p>Loading stats...</p>';
+  try {
+    // Assuming allMusic array is already populated from loadAllMusic
+    if (allMusic.length === 0) {
+      await loadAllMusic(); // Ensure all music is loaded first
+    }
+
+    const userStats = {};
+    allMusic.forEach(music => {
+      const sharedBy = music.sharedBy || 'Unknown';
+      if (userStats[sharedBy]) {
+        userStats[sharedBy]++;
+      } else {
+        userStats[sharedBy] = 1;
+      }
+    });
+
+    let statsHtml = '<ul>';
+    for (const user in userStats) {
+      statsHtml += `
+        <li>
+          <span class="user-name">${user}</span>
+          <span class="song-count">${userStats[user]} songs</span>
+        </li>
+      `;
+    }
+    statsHtml += '</ul>';
+
+    statsBody.innerHTML = statsHtml;
+
+  } catch (error) {
+    console.error('Error fetching and displaying stats:', error);
+    statsBody.innerHTML = '<p>Failed to load stats. Please try again later.</p>';
+  }
+}
 
 async function getTitleFromUrl(url) {
   try {
@@ -339,29 +399,19 @@ document.addEventListener('DOMContentLoaded', () => {
 // Add function to toggle sort
 async function toggleSort() {
   currentSort = currentSort === 'newest' ? 'oldest' : 'newest';
-  const sortButton = document.getElementById('sort-button');
   sortButton.textContent = currentSort === 'newest' ? '↑ Newest First' : '↓ Oldest First';
-  
-  // Reset pagination
-  currentPage = 1;
-  hasMore = true;
-  allLoadedItems.clear();
-  
-  // Clear the current list
+  // Clear the existing music list before re-rendering
   musicList.innerHTML = '';
-  
-  // Load music with new sort
+  allMusic = []; // Clear all music to refetch
+  allLoadedItems.clear(); // Clear loaded items set
+  currentPage = 1; // Reset to first page
+  hasMore = true;
+  isLoading = false;
   await loadMoreMusic();
 }
 
-// Add sort button to the controls
-const controls = document.querySelector('.controls');
-const sortButton = document.createElement('button');
-sortButton.id = 'sort-button';
-sortButton.className = 'sort-button';
-sortButton.textContent = '↑ Newest First';
+// Add event listener for sort button
 sortButton.addEventListener('click', toggleSort);
-controls.appendChild(sortButton);
 
 // Update search function to maintain sort order
 async function searchMusic(query) {

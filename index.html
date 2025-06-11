@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Music Share</title>
+  <title>S&A Music Share</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -15,7 +15,7 @@
     </div>
   </div>
   <div class="container">
-    <h1>🎵 Music Share</h1>
+    <h1>🎵 S&A Music Share</h1>
     <form id="music-form">
       <input type="url" id="music-url" placeholder="Enter YouTube or Spotify URL" required>
       <input type="text" id="music-title" placeholder="Enter title (optional)">
@@ -26,8 +26,19 @@
         <input type="text" id="search-input" placeholder="Search music...">
       </div>
       <button id="random-button" class="random-button">🎲 Play Random</button>
+      <button id="sort-button" class="sort-button">↑ Newest First</button>
+      <button id="stats-button" class="sort-button">📊 Stats</button>
     </div>
     <div id="music-list" class="music-list"></div>
+  </div>
+  <div id="stats-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h2>User Stats</h2>
+      <div id="stats-body">
+        <p>Loading stats...</p>
+      </div>
+    </div>
   </div>
   <script src="https://www.youtube.com/iframe_api"></script>
   <script src="script.js"></script>
