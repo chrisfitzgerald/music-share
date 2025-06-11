@@ -180,7 +180,7 @@ form button:focus-visible {
 }
 
 .music-card::after {
-  content: '🡪';
+  content: '→';
   position: absolute;
   top: 0;
   right: 0;
