@@ -49,10 +49,11 @@ app.get('/api/music', async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const sort = req.query.sort === 'oldest' ? 1 : -1; // 1 for ascending (oldest first), -1 for descending (newest first)
 
     const [music, total] = await Promise.all([
       Music.find()
-        .sort({ createdAt: -1 })
+        .sort({ createdAt: sort })
         .skip(skip)
         .limit(limit),
       Music.countDocuments()

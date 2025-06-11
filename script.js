@@ -23,6 +23,9 @@ let isLoading = false;
 let hasMore = true;
 let allLoadedItems = new Set(); // Keep track of loaded items to prevent duplicates
 
+// Add sort state
+let currentSort = 'newest'; // 'newest' or 'oldest'
+
 // Initially hide the title input
 titleInput.style.display = 'none';
 
@@ -213,7 +216,7 @@ async function loadMoreMusic() {
   }
   
   try {
-    const response = await fetch(`${API_URL}/music?page=${currentPage}&limit=20`);
+    const response = await fetch(`${API_URL}/music?page=${currentPage}&limit=20&sort=${currentSort}`);
     const data = await response.json();
     
     if (data.music.length === 0) {
@@ -327,6 +330,34 @@ document.addEventListener('DOMContentLoaded', () => {
   renderMusicList();
 });
 
+// Add function to toggle sort
+async function toggleSort() {
+  currentSort = currentSort === 'newest' ? 'oldest' : 'newest';
+  const sortButton = document.getElementById('sort-button');
+  sortButton.textContent = currentSort === 'newest' ? '↑ Newest First' : '↓ Oldest First';
+  
+  // Reset pagination
+  currentPage = 1;
+  hasMore = true;
+  allLoadedItems.clear();
+  
+  // Clear the current list
+  musicList.innerHTML = '';
+  
+  // Load music with new sort
+  await loadMoreMusic();
+}
+
+// Add sort button to the controls
+const controls = document.querySelector('.controls');
+const sortButton = document.createElement('button');
+sortButton.id = 'sort-button';
+sortButton.className = 'sort-button';
+sortButton.textContent = '↑ Newest First';
+sortButton.addEventListener('click', toggleSort);
+controls.appendChild(sortButton);
+
+// Update search function to maintain sort order
 async function searchMusic(query) {
   query = query.toLowerCase();
   
@@ -335,7 +366,7 @@ async function searchMusic(query) {
   
   try {
     // Query the database directly
-    const response = await fetch(`${API_URL}/music/search?q=${encodeURIComponent(query)}`);
+    const response = await fetch(`${API_URL}/music/search?q=${encodeURIComponent(query)}&sort=${currentSort}`);
     const data = await response.json();
     
     // Update allMusic with search results
