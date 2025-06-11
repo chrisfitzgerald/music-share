@@ -434,23 +434,6 @@ searchInput.addEventListener('input', async (e) => {
   }
 });
 
-// Update search button click handler
-searchButton.addEventListener('click', async () => {
-  const query = searchInput.value.trim();
-  if (query === '') {
-    // Clear the current list
-    musicList.innerHTML = '';
-    // Reset pagination
-    currentPage = 1;
-    hasMore = true;
-    allLoadedItems.clear();
-    // Load initial music list
-    await loadMoreMusic();
-  } else {
-    await searchMusic(query);
-  }
-});
-
 randomButton.addEventListener('click', playRandomMusic);
 
 // Initial load
