@@ -142,22 +142,22 @@ function getCoverArt(url) {
   return 'https://cdn-icons-png.flaticon.com/512/727/727245.png';
 }
 
-function createMusicCard(url, title, sharedBy) {
+function createMusicCard(music) {
   const card = document.createElement('div');
   card.className = 'music-card';
   
   const cover = document.createElement('img');
   cover.className = 'music-cover';
-  cover.src = getCoverArt(url);
+  cover.src = music.coverUrl || 'https://via.placeholder.com/150';
   cover.alt = 'cover';
   
   const infoDiv = document.createElement('div');
   infoDiv.className = 'music-info';
   infoDiv.innerHTML = `
-    <h3>${title}</h3>
+    <h3>${music.title}</h3>
     <p class="music-meta">
-      <span class="shared-by">Shared by ${sharedBy}</span>
-      <span class="shared-date">${new Date(sharedAt).toLocaleDateString()}</span>
+      <span class="shared-by">Shared by ${music.sharedBy}</span>
+      <span class="shared-date">${music.sharedAt ? new Date(music.sharedAt).toLocaleDateString() : ''}</span>
     </p>
   `;
   
@@ -165,24 +165,24 @@ function createMusicCard(url, title, sharedBy) {
   card.appendChild(infoDiv);
   
   // Add play overlay for YouTube links
-  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+  if (music.url.includes('youtube.com') || music.url.includes('youtu.be')) {
     const playOverlay = document.createElement('div');
     playOverlay.className = 'play-overlay';
+    playOverlay.innerHTML = '<i class="fas fa-play"></i>';
     card.appendChild(playOverlay);
   }
   
-  // Add click handler for the entire card
   card.addEventListener('click', (e) => {
-    // Check if the click was on the right side of the card
+    // Check if click was on the right side of the card (last 64px)
     const rect = card.getBoundingClientRect();
-    const isLinkClick = e.clientX > rect.right - 64; // Match the width of the ::after element
+    const clickX = e.clientX - rect.left;
     
-    if (isLinkClick) {
-      // Open the original link in a new tab
-      window.open(url, '_blank');
-    } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
-      // Play the video in the embedded player
-      playYouTubeVideo(url);
+    if (clickX > rect.width - 64) {
+      // Open original link in new tab
+      window.open(music.url, '_blank');
+    } else {
+      // Play in embedded player
+      playMusic(music);
     }
   });
   
@@ -243,7 +243,7 @@ async function loadMoreMusic() {
     
     newItems.forEach(({ url, title, sharedBy }) => {
       allLoadedItems.add(url);
-      const card = createMusicCard(url, title, sharedBy);
+      const card = createMusicCard({ url, title, sharedBy });
       musicList.appendChild(card);
     });
     
@@ -276,7 +276,7 @@ async function renderMusicList() {
     
     data.music.forEach(({ url, title, sharedBy }) => {
       allLoadedItems.add(url);
-      const card = createMusicCard(url, title, sharedBy);
+      const card = createMusicCard({ url, title, sharedBy });
       musicList.appendChild(card);
     });
     
@@ -371,7 +371,7 @@ async function searchMusic(query) {
     
     // Render filtered results
     data.music.forEach(({ url, title, sharedBy }) => {
-      const card = createMusicCard(url, title, sharedBy);
+      const card = createMusicCard({ url, title, sharedBy });
       musicList.appendChild(card);
     });
     
