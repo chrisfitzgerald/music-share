@@ -376,14 +376,37 @@ async function playRandomMusic() {
   }
 }
 
-// Event Listeners
-searchButton.addEventListener('click', () => {
-  searchMusic(searchInput.value);
+// Add event listener for search input
+searchInput.addEventListener('input', async (e) => {
+  const query = e.target.value.trim();
+  if (query === '') {
+    // Clear the current list
+    musicList.innerHTML = '';
+    // Reset pagination
+    currentPage = 1;
+    hasMore = true;
+    allLoadedItems.clear();
+    // Load initial music list
+    await loadMoreMusic();
+  } else {
+    await searchMusic(query);
+  }
 });
 
-searchInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    searchMusic(searchInput.value);
+// Update search button click handler
+searchButton.addEventListener('click', async () => {
+  const query = searchInput.value.trim();
+  if (query === '') {
+    // Clear the current list
+    musicList.innerHTML = '';
+    // Reset pagination
+    currentPage = 1;
+    hasMore = true;
+    allLoadedItems.clear();
+    // Load initial music list
+    await loadMoreMusic();
+  } else {
+    await searchMusic(query);
   }
 });
 
