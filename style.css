@@ -468,7 +468,7 @@ form button:focus-visible {
   padding: 0.7rem 1.2rem;
   border: none;
   border-radius: 8px;
-  background: var(--ui);
+  background: var(--or);
   color: var(--bg);
   font-weight: bold;
   cursor: pointer;
@@ -485,7 +485,7 @@ form button:focus-visible {
   padding: 0.7rem 1.2rem;
   border: none;
   border-radius: 8px;
-  background: var(--ui);
+  background: var(--or);
   color: var(--bg);
   font-weight: bold;
   cursor: pointer;
