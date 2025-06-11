@@ -191,7 +191,7 @@ form button:focus-visible {
 }
 
 .music-card:hover .music-cover {
-  opacity: 0.8;
+  opacity: 0.2;
 }
 
 .music-info {
