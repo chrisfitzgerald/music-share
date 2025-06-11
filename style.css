@@ -1,6 +1,28 @@
+:root {
+  /* Base colors */
+  --bg: #100F0F;      /* black */
+  --bg-2: #1C1B1A;    /* base-950 */
+  --ui: #282726;      /* base-900 */
+  --ui-2: #343331;    /* base-850 */
+  --ui-3: #403E3C;    /* base-800 */
+  --tx-3: #575653;    /* base-700 */
+  --tx-2: #878580;    /* base-500 */
+  --tx: #CECDC3;      /* base-200 */
+  
+  /* Accent colors */
+  --re: #D14D41;      /* red-400 */
+  --or: #DA702C;      /* orange-400 */
+  --ye: #D0A215;      /* yellow-400 */
+  --gr: #879A39;      /* green-400 */
+  --cy: #3AA99F;      /* cyan-400 */
+  --bl: #4385BE;      /* blue-400 */
+  --pu: #8B7EC8;      /* purple-400 */
+  --ma: #CE5D97;      /* magenta-400 */
+}
+
 body {
-  background: #18181b;
-  color: #f4f4f5;
+  background: var(--bg);
+  color: var(--tx);
   font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
   margin: 0;
   min-height: 100vh;
@@ -11,7 +33,7 @@ body {
 .container {
   max-width: 800px;
   margin: 40px auto;
-  background: #23232a;
+  background: var(--bg-2);
   border-radius: 16px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.2);
   padding: 2rem 1.5rem 2.5rem 1.5rem;
@@ -26,6 +48,7 @@ h1 {
   margin-bottom: 1.5rem;
   font-size: 2.2rem;
   letter-spacing: 1px;
+  color: var(--tx);
 }
 
 form {
@@ -41,8 +64,8 @@ form input[type="text"] {
   padding: 0.7rem;
   border: none;
   border-radius: 8px;
-  background: #2d2d36;
-  color: #f4f4f5;
+  background: var(--ui);
+  color: var(--tx);
   font-size: 1rem;
   outline: 2px solid transparent;
   transition: all 0.3s ease;
@@ -71,15 +94,15 @@ form input[type="text"].visible {
 
 form input[type="url"]:focus,
 form input[type="text"]:focus {
-  outline-color: #6366f1;
+  outline-color: var(--cy);
 }
 
 form button {
   padding: 0.7rem 1.2rem;
   border: none;
   border-radius: 8px;
-  background: #6366f1;
-  color: #fff;
+  background: var(--cy);
+  color: var(--bg);
   font-weight: bold;
   cursor: pointer;
   transition: background 0.2s;
@@ -89,11 +112,11 @@ form button {
 }
 
 form button:hover {
-  background: #818cf8;
+  background: var(--bl);
 }
 
 form button:focus-visible {
-  outline: 2px solid #6366f1;
+  outline: 2px solid var(--cy);
   outline-offset: 2px;
 }
 
@@ -112,7 +135,7 @@ form button:focus-visible {
 }
 
 .music-card {
-  background: #2d2d36;
+  background: var(--ui);
   border-radius: 12px;
   padding: 1.5rem;
   display: flex;
@@ -131,7 +154,7 @@ form button:focus-visible {
 }
 
 .music-card:hover {
-  box-shadow: 0 4px 16px rgba(99,102,241,0.15);
+  box-shadow: 0 4px 16px rgba(58, 169, 159, 0.15);
   transform: translateY(-2px);
 }
 
@@ -156,7 +179,7 @@ form button:focus-visible {
   text-align: left;
   position: relative;
   z-index: 2;
-  background: linear-gradient(to right, rgba(45, 45, 54, 0.85), rgba(45, 45, 54, 0.65));
+  background: linear-gradient(to right, var(--ui-2), var(--ui-3));
   padding: 0.8rem;
   border-radius: 8px;
   display: inline-block;
@@ -175,11 +198,12 @@ form button:focus-visible {
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: fit-content;
+  color: var(--tx);
 }
 
 .music-shared-by {
   font-size: 0.9rem;
-  color: #a1a1aa;
+  color: var(--tx-2);
   margin-top: 0.5rem;
   font-style: italic;
 }
@@ -187,9 +211,9 @@ form button:focus-visible {
 .no-results {
   text-align: center;
   padding: 2rem;
-  color: #a1a1aa;
+  color: var(--tx-2);
   font-style: italic;
-  background: #2d2d36;
+  background: var(--ui);
   border-radius: 12px;
   margin: 1rem 0;
 }
@@ -204,7 +228,7 @@ form button:focus-visible {
   left: 50%;
   transform: translate(-50%, -50%);
   background: rgba(0, 0, 0, 0.7);
-  color: white;
+  color: var(--tx);
   border: none;
   border-radius: 50%;
   width: 50px;
@@ -293,15 +317,16 @@ form button:focus-visible {
   top: 0;
   left: 0;
   width: 100%;
-  height: 0;
+  height: 100%;
   background: rgba(0, 0, 0, 0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
   z-index: 1000;
-  transition: height 0.3s ease;
-  overflow: hidden;
 }
 
 .player-container.active {
-  height: 250px;
+  display: flex;
 }
 
 .player-wrapper {
@@ -320,25 +345,24 @@ form button:focus-visible {
 
 .close-player {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(184, 45, 45, 0.5);
-  color: white;
+  top: 20px;
+  right: 20px;
+  background: var(--ui);
+  color: var(--tx);
   border: none;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  font-size: 30px;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
   cursor: pointer;
-  z-index: 1001;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  transition: background 0.2s;
 }
 
 .close-player:hover {
-  background: rgba(161, 11, 11, 0.8);
+  background: var(--ui-2);
 }
 
 .container {
@@ -359,51 +383,54 @@ form button:focus-visible {
 
 .search-container {
   display: flex;
-  gap: 10px;
-  flex: 1;
-  min-width: 200px;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 #search-input {
   flex: 1;
-  padding: 10px;
-  border: 2px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  min-width: 200px;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--ui);
+  color: var(--tx);
+  font-size: 1rem;
+  outline: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+#search-input:focus {
+  outline-color: var(--cy);
 }
 
 #search-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
+  padding: 0.7rem 1.2rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  background: var(--cy);
+  color: var(--bg);
+  font-weight: bold;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
+  transition: background 0.2s;
 }
 
 #search-button:hover {
-  background-color: #45a049;
+  background: var(--bl);
 }
 
 .random-button {
-  background-color: #2196F3;
-  color: white;
-  padding: 10px 20px;
+  padding: 0.7rem 1.2rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  background: var(--gr);
+  color: var(--bg);
+  font-weight: bold;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  transition: background 0.2s;
 }
 
 .random-button:hover {
-  background-color: #1976D2;
+  background: var(--ye);
 }
 
 #music-form {
