@@ -175,20 +175,24 @@ function createMusicCard(music) {
     playOverlay.className = 'play-overlay';
     playOverlay.innerHTML = '<i class="fas fa-play"></i>';
     card.appendChild(playOverlay);
+
+    // Add click listener directly to the play overlay
+    playOverlay.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent the card's click listener from firing
+      playYouTubeVideo(music.url);
+    });
   }
   
   card.addEventListener('click', (e) => {
-    // Check if click was on the right side of the card (last 64px)
+    // Only handle clicks for the right-side link area
     const rect = card.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     
     if (clickX > rect.width - 64) {
       // Open original link in new tab
       window.open(music.url, '_blank');
-    } else {
-      // Play in embedded player
-      playYouTubeVideo(music.url);
     }
+    // No else block here, as playOverlay handles video playback
   });
   
   return card;
