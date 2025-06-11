@@ -24,7 +24,7 @@ let hasMore = true;
 let allLoadedItems = new Set(); // Keep track of loaded items to prevent duplicates
 
 // Add sort state
-let currentSort = 'newest'; // 'newest' or 'oldest'
+let currentSort = 'oldest'; // 'newest' or 'oldest'
 
 // Initially hide the title input
 titleInput.style.display = 'none';
@@ -359,7 +359,7 @@ const controls = document.querySelector('.controls');
 const sortButton = document.createElement('button');
 sortButton.id = 'sort-button';
 sortButton.className = 'sort-button';
-sortButton.textContent = '↑ Newest First';
+sortButton.textContent = '↑ Oldest First';
 sortButton.addEventListener('click', toggleSort);
 controls.appendChild(sortButton);
 

@@ -47,13 +47,13 @@ const Music = mongoose.model('Music', musicSchema);
 app.get('/api/music', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit) || 20;
     const skip = (page - 1) * limit;
-    const sort = req.query.sort === 'oldest' ? 1 : -1; // 1 for ascending (oldest first), -1 for descending (newest first)
+    const sort = req.query.sort === 'newest' ? -1 : 1;
 
     const [music, total] = await Promise.all([
       Music.find()
-        .sort({ createdAt: sort })
+        .sort({ sharedAt: sort })
         .skip(skip)
         .limit(limit),
       Music.countDocuments()
