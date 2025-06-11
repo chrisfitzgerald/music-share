@@ -49,7 +49,7 @@ app.get('/api/music', async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const skip = (page - 1) * limit;
-    const sort = req.query.sort === 'newest' ? -1 : 1;
+    const sort = req.query.sort === 'oldest' ? 1 : -1;  // Default to newest (-1) if not 'oldest'
 
     const [music, total] = await Promise.all([
       Music.find()
