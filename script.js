@@ -34,23 +34,54 @@ let currentSort = 'newest'; // 'newest' or 'oldest'
 // Initially hide the title input
 titleInput.style.display = 'none';
 
-// YouTube API ready
-window.onYouTubeIframeAPIReady = function() {
-  player = new YT.Player('player', {
-    height: '100%',
-    width: '100%',
-    videoId: '',
-    playerVars: {
-      'playsinline': 1,
-      'controls': 1,
-      'autoplay': 1
-    },
-    events: {
-      'onReady': onPlayerReady,
-      'onStateChange': onPlayerStateChange
-    }
-  });
-};
+// Initialize app with progressive enhancement
+function initializeApp() {
+  // Check if JavaScript is enabled
+  document.documentElement.classList.add('js-enabled');
+  
+  // Check if the browser supports modern features
+  if ('loading' in HTMLImageElement.prototype) {
+    document.documentElement.classList.add('supports-lazy-loading');
+  }
+  
+  // Show loading state
+  document.body.classList.add('loading');
+  
+  // Initialize the app
+  initializePlayer();
+  initializeMusicList();
+}
+
+// Initialize YouTube player
+function initializePlayer() {
+  window.onYouTubeIframeAPIReady = function() {
+    player = new YT.Player('player', {
+      height: '100%',
+      width: '100%',
+      videoId: '',
+      playerVars: {
+        'playsinline': 1,
+        'controls': 1,
+        'autoplay': 1
+      },
+      events: {
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  };
+}
+
+// Initialize music list
+async function initializeMusicList() {
+  try {
+    await loadAllMusic();
+    document.body.classList.remove('loading');
+  } catch (error) {
+    console.error('Error initializing music list:', error);
+    document.body.classList.remove('loading');
+  }
+}
 
 function onPlayerReady(event) {
   console.log('Player is ready');
@@ -206,15 +237,24 @@ function createMusicCard(music) {
   const card = document.createElement('div');
   card.className = 'music-card';
   
-  const cover = document.createElement('img');
-  cover.className = 'music-cover';
-  const coverSrc = getCoverArt(music.url) || 'https://via.placeholder.com/150';
-  cover.src = coverSrc;
-  cover.alt = 'cover';
-
+  // Add loading state
+  card.classList.add('loading');
+  
+  const coverArt = document.createElement('img');
+  coverArt.className = 'music-cover';
+  coverArt.loading = 'lazy';
+  coverArt.decoding = 'async';
+  coverArt.src = getCoverArt(music.url);
+  coverArt.alt = music.title || 'Music cover art';
+  
+  // Remove loading state when image is loaded
+  coverArt.onload = () => {
+    card.classList.remove('loading');
+  };
+  
   console.log('Music card creation:');
   console.log('Music URL:', music.url);
-  console.log('Cover Image URL:', coverSrc);
+  console.log('Cover Image URL:', getCoverArt(music.url));
   
   const infoDiv = document.createElement('div');
   infoDiv.className = 'music-info';
@@ -226,7 +266,7 @@ function createMusicCard(music) {
     </p>
   `;
   
-  card.appendChild(cover);
+  card.appendChild(coverArt);
   card.appendChild(infoDiv);
   
   // Add play overlay for YouTube links
@@ -392,9 +432,7 @@ form.addEventListener('submit', async (e) => {
 });
 
 // Load initial music list when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-  renderMusicList();
-});
+document.addEventListener('DOMContentLoaded', initializeApp);
 
 // Add function to toggle sort
 async function toggleSort() {

@@ -151,6 +151,7 @@ form button:focus-visible {
   color: inherit;
   min-height: 180px;
   margin-bottom: 20px;
+  will-change: transform;
 }
 
 .play-overlay {
@@ -209,8 +210,12 @@ form button:focus-visible {
   height: 100%;
   object-fit: cover;
   z-index: 1;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.music-cover.loaded {
+  opacity: 1;
 }
 
 .music-card:hover .music-cover {
@@ -375,6 +380,7 @@ form button:focus-visible {
   align-items: center;
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  will-change: transform, opacity;
 }
 
 .player-container.active {
@@ -640,5 +646,27 @@ form button:focus-visible {
     font-size: 24px;
     top: 10px;
     right: 15px;
+  }
+}
+
+/* Add loading skeleton styles */
+.music-card.loading {
+  background: linear-gradient(90deg, var(--ui) 25%, var(--ui-2) 50%, var(--ui) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Add reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 } 
